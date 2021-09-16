@@ -1,0 +1,10 @@
+---
+title: "HW1"
+author: Yue Yin
+date: September 16, 2021
+output: github_document
+---
+
+```{r}
+hist(rnorm(10))
+```
