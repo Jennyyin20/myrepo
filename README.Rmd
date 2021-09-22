@@ -11,23 +11,31 @@ library(rvest)
 library(stringr)
 library(readr)
 library(XML)
-#bridges <- read_csv("2020HwyBridgesDelimitedAllStates.txt")
+library(ggplot2)
 ```
 
 ```{r}
 webpage <- read_html("https://guide.wisc.edu/faculty/")
 xml_find_all(webpage, ".//br") %>% xml_add_sibling("p", "\n")
 xml_find_all(webpage, ".//br") %>% xml_remove()
-faculty <- html_nodes(webpage, "li")[-(1:12)]
+faculty <- html_nodes(webpage, "li")[13:3801]
 faculty <- html_text(faculty)
-table <- data.frame(faculty)
-final_table <- str_split_fixed(table$faculty, "\n\n", 4)
-colnames(final_table) <- c("name","position","department","degree information")
-
+df <- as.data.frame(faculty)
+final_df <- as.data.frame(str_split_fixed(df$faculty, "\n", 4))
+colnames(final_df) <- c("name","position","department","degree information")
+final_df$`degree information` <- gsub("\n","", final_df$`degree information`)
 ```
 
-one time html_document (turn in on canvas), one time github_document (push to GitHub), make a plot
+```{r}
+str(final_df)
+head(final_df)
+tail(final_df)
+final_df %>% count(department, sort = T)
+final_df %>% count(position, sort = T)
+ggplot(final_df, aes(x = factor(department))) + geom_bar()
+ggplot(final_df, aes(x = factor(position))) + geom_bar()
+```
 
-include link to github in html doc
+In conclusion, most faculty has the position of professor and the department with most faculty is law school. Surprisingly, statistics department does not have as many faculty as I thought.
 
-do str(data) and some plot to show data/model
+The link of my GitHub: https://github.com/Jennyyin20/myrepo
