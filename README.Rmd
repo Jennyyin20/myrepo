@@ -6,5 +6,28 @@ output: github_document
 ---
 
 ```{r}
-hist(rnorm(10))
+library(tidyverse)
+library(rvest)
+library(stringr)
+library(readr)
+library(XML)
+#bridges <- read_csv("2020HwyBridgesDelimitedAllStates.txt")
 ```
+
+```{r}
+webpage <- read_html("https://guide.wisc.edu/faculty/")
+xml_find_all(webpage, ".//br") %>% xml_add_sibling("p", "\n")
+xml_find_all(webpage, ".//br") %>% xml_remove()
+faculty <- html_nodes(webpage, "li")[-(1:12)]
+faculty <- html_text(faculty)
+table <- data.frame(faculty)
+final_table <- str_split_fixed(table$faculty, "\n\n", 4)
+colnames(final_table) <- c("name","position","department","degree information")
+
+```
+
+one time html_document (turn in on canvas), one time github_document (push to GitHub), make a plot
+
+include link to github in html doc
+
+do str(data) and some plot to show data/model
