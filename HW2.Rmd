@@ -1,0 +1,22 @@
+---
+title: "HW2"
+author: Yue Yin
+date: September 27, 2021
+output: github_document
+---
+
+```{r}
+library(dplyr)
+library(nycflights13)
+library(ggplot2)
+```
+
+```{r}
+#1
+summary(flights)
+```
+
+8255 flights have missing `dep_time`. Other variables that are missing `dep_delay`, `arr_time`, `arr_delay` and `air_time`. These rows may represent flights that failed to depart or arrive. They may also be incomplete because the data was lost.
+
+
+
