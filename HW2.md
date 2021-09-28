@@ -124,3 +124,6 @@ flights %>%
     ## `summarise()` ungrouping output (override with `.groups` argument)
 
 ![](HW2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+The proportion of canceled flights is not related strongly to the
+average delay.

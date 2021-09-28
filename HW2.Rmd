@@ -41,6 +41,6 @@ flights %>%
   geom_point(aes(y=mean_arr_delay), color = 'blue')
 ```
 
-
+The proportion of canceled flights is not related strongly to the average delay.
 
 
