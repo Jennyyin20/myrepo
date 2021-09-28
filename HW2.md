@@ -21,7 +21,15 @@ library(dplyr)
 ``` r
 library(nycflights13)
 library(ggplot2)
+library(lubridate)
 ```
+
+    ## 
+    ## Attaching package: 'lubridate'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     date, intersect, setdiff, union
 
 ``` r
 #1
@@ -73,3 +81,46 @@ summary(flights)
 `dep_delay`, `arr_time`, `arr_delay` and `air_time`. These rows may
 represent flights that failed to depart or arrive. They may also be
 incomplete because the data was lost.
+
+``` r
+#2
+flights %>% 
+  mutate(dep_time = dep_time %/% 100 * 60 + dep_time %% 100,
+         sched_dep_time = sched_dep_time %/% 100 * 60 + sched_dep_time %% 100)
+```
+
+    ## # A tibble: 336,776 x 19
+    ##     year month   day dep_time sched_dep_time dep_delay arr_time sched_arr_time
+    ##    <int> <int> <int>    <dbl>          <dbl>     <dbl>    <int>          <int>
+    ##  1  2013     1     1      317            315         2      830            819
+    ##  2  2013     1     1      333            329         4      850            830
+    ##  3  2013     1     1      342            340         2      923            850
+    ##  4  2013     1     1      344            345        -1     1004           1022
+    ##  5  2013     1     1      354            360        -6      812            837
+    ##  6  2013     1     1      354            358        -4      740            728
+    ##  7  2013     1     1      355            360        -5      913            854
+    ##  8  2013     1     1      357            360        -3      709            723
+    ##  9  2013     1     1      357            360        -3      838            846
+    ## 10  2013     1     1      358            360        -2      753            745
+    ## # … with 336,766 more rows, and 11 more variables: arr_delay <dbl>,
+    ## #   carrier <chr>, flight <int>, tailnum <chr>, origin <chr>, dest <chr>,
+    ## #   air_time <dbl>, distance <dbl>, hour <dbl>, minute <dbl>, time_hour <dttm>
+
+``` r
+#3
+flights %>% 
+  mutate(dep_day = make_date(year, month, day)) %>% 
+  group_by(dep_day) %>% 
+  summarize(canceled = sum(is.na(dep_time)),
+            count = n(),
+            canceled_prop = canceled/count,
+            mean_dep_delay = mean(dep_delay, na.rm = T),
+            mean_arr_delay = mean(arr_delay, na.rm = T)) %>%
+  ggplot(aes(x= canceled_prop)) + 
+  geom_point(aes(y=mean_dep_delay), color = 'purple') +
+  geom_point(aes(y=mean_arr_delay), color = 'blue')
+```
+
+    ## `summarise()` ungrouping output (override with `.groups` argument)
+
+![](HW2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
