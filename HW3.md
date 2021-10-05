@@ -24,8 +24,9 @@ library(ggplot2)
 library(ggforce)
 ```
 
-\#\#\#Introduction Pattern 1: Morning is the best time to fly without
-much delay.
+### Introduction
+
+Pattern 1: Morning is the best time to fly without much delay.
 
 Pattern 2: It might be better to fly in the morning when relative
 humidity is low.
@@ -50,10 +51,11 @@ flights %>%
 
     ## Warning: Removed 1 rows containing missing values (position_stack).
 
-![](HW3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- --> 7pm is the time
-period with the longest mean departure delay, 5am is the time period
-with the shortest mean departure delay. So it might be better to fly in
-the morning to avoid delays.
+![](HW3_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+7pm is the time period with the longest mean departure delay, 5am is the
+time period with the shortest mean departure delay. So it might be
+better to fly in the morning to avoid delays.
 
 Next, select all the rows with departure hour of 5.
 
@@ -67,7 +69,7 @@ cor(flights_weather$humid,flights_weather$dep_delay,use='complete.obs')
 
 ``` r
 flights_weather %>% 
-  filter(hour.x == "5") %>% 
+  filter(hour.x == 5) %>% 
   ggplot(mapping = aes(x = humid, y = dep_delay)) + 
   geom_point() +
   geom_smooth(method = "lm")
@@ -79,9 +81,11 @@ flights_weather %>%
 
     ## Warning: Removed 9 rows containing missing values (geom_point).
 
-![](HW3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- --> Relative
-humidity is weakly related to the delay time when the departure hour is
-5, and higher humidity to some degree causes longer departure delay.
+![](HW3_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Relative humidity is weakly related to the delay time when the departure
+hour is 5, and higher humidity to some degree causes longer departure
+delay.
 
 ``` r
 lm <- lm(dep_delay ~ origin, data = flights)
@@ -111,7 +115,7 @@ summary(lm)
 
 ``` r
 flights %>% 
-  filter(hour == "5") %>%
+  filter(hour == 5) %>%
   ggplot(mapping = aes(x = origin, y = dep_delay)) + 
   geom_boxplot() +
   facet_zoom(ylim = c(0, 100))
@@ -119,8 +123,10 @@ flights %>%
 
     ## Warning: Removed 9 rows containing non-finite values (stat_boxplot).
 
-![](HW3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- --> The origin is
-significant in predicting departure delay, and JFK may be the airport
-with overall shorter departure delay when departure hour is 5.
+![](HW3_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+The origin is significant in predicting departure delay, and JFK may be
+the airport with overall shorter departure delay when departure hour is
+5.
 
 GitHub link: <https://github.com/Jennyyin20/myrepo>
