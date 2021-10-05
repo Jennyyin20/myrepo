@@ -1,0 +1,55 @@
+---
+title: "HW3"
+author: Yue Yin
+date: October 3, 2021
+output: github_document
+---
+```{r}
+library(dplyr)
+library(nycflights13)
+library(ggplot2)
+library(ggforce)
+```
+
+###Introduction
+Pattern 1: Morning is the best time to fly without much delay.
+
+Pattern 2: It might be better to fly in the morning when relative humidity is low.
+
+Pattern 3: It might be better to fly from JFK airport in the morning.
+
+```{r}
+cor(flights$hour, flights$dep_delay, use='complete.obs')
+flights %>% 
+  group_by(hour) %>% 
+  summarise(dep_delay = mean(dep_delay, na.rm = T)) %>% 
+  arrange(dep_delay) %>% 
+  ggplot(aes(hour, dep_delay, fill = dep_delay)) + geom_col()
+```
+7pm is the time period with the longest mean departure delay, 5am is the time period with the shortest mean departure delay. So it might be better to fly in the morning to avoid delays. 
+
+Next, select all the rows with departure hour of  5.
+```{r}
+flights_weather <- flights %>%
+  inner_join(weather, by = c("origin", "time_hour")) 
+cor(flights_weather$humid,flights_weather$dep_delay,use='complete.obs')
+flights_weather %>% 
+  filter(hour.x == "5") %>% 
+  ggplot(mapping = aes(x = humid, y = dep_delay)) + 
+  geom_point() +
+  geom_smooth(method = "lm")
+```
+Relative humidity is weakly related to the delay time when the departure hour is 5, and higher humidity to some degree causes longer departure delay.
+
+```{r}
+lm <- lm(dep_delay ~ origin, data = flights)
+summary(lm)
+flights %>% 
+  filter(hour == "5") %>%
+  ggplot(mapping = aes(x = origin, y = dep_delay)) + 
+  geom_boxplot() +
+  facet_zoom(ylim = c(0, 100))
+```
+The origin is significant in predicting departure delay, and JFK may be the airport with overall shorter departure delay when departure hour is 5.
+
+GitHub link: https://github.com/Jennyyin20/myrepo
